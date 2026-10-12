@@ -128,4 +128,4 @@ Email [info@deepmedchem.com](mailto:info@deepmedchem.com), or [open an issue](ht
 
 ## License
 
-[MIT](LICENSE.md)
+[MIT](LICENSE)
