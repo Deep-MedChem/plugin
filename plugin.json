@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deepmedchem",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Search public chemical spaces by molecular similarity with DeepMedChem.",
   "author": {
     "name": "Deep MedChem",
@@ -18,9 +18,10 @@
         "shortDescription": "Molecular similarity search",
         "longDescription": "Search public make-on-demand chemical spaces, such as Enamine REAL, for purchasable molecules similar to a structure you supply as SMILES. Choose fingerprint (Morgan/Tanimoto), 3D shape or electrostatic (ESP) similarity. Results appear as an interactive structure grid with scores, list prices and a CSV export. Searches run one SMILES against one database and return up to 20 hits. Guest access needs no account. Scores describe structural similarity, not biological activity or safety, and results are a bounded shortlist rather than every match.",
         "developerName": "Deep MedChem",
-        "category": "Research",
+        "category": "Education & Research",
         "capabilities": ["Read"],
         "websiteURL": "https://deepmedchem.com",
+        "supportURL": "https://github.com/Deep-MedChem/plugin/issues",
         "privacyPolicyURL": "https://cheese.deepmedchem.com/privacy-policy",
         "termsOfServiceURL": "https://cheese.deepmedchem.com/terms-and-conditions",
         "defaultPrompt": [
@@ -31,6 +32,62 @@
         "brandColor": "#24265D",
         "composerIcon": "./assets/icon.png",
         "logo": "./assets/icon.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Discover available databases and guest limits",
+              "prompt": "Which chemical space databases can I search with DeepMedChem?",
+              "tools_triggered": "catalog",
+              "expected_behavior": "List the databases returned by the live catalog, their identifiers, methods, pricing when available, and the current guest limit. Do not invent database names or availability."
+            },
+            {
+              "description": "Fingerprint search, CSV export and saved CHEESE results",
+              "prompt": "Find 20 molecules similar to aspirin, SMILES CC(=O)Oc1ccccc1C(=O)O, in Enamine REAL using Morgan similarity, and show the results grid.",
+              "tools_triggered": "catalog, similarity_search",
+              "expected_behavior": "Resolve the Enamine database ID from catalog and search with method morgan and at most 20 hits. Show the returned molecular grid in a compatible host, with similarity scores, available prices and vendor catalog IDs when supplied. Click CSV to check that it contains the displayed SMILES, platform product IDs, available vendor catalog IDs, scores and prices. Click the exact returned CHEESE job= link and reload it: the stored results should open without another Search action. Scores describe structural similarity, not biological activity."
+            },
+            {
+              "description": "Shape similarity search",
+              "prompt": "Search Enamine REAL for up to 20 shape-similar analogues of c1ccc(CCNc2ncnc3ccccc23)cc1 and show the grid.",
+              "tools_triggered": "catalog, similarity_search",
+              "expected_behavior": "Use the catalog's database ID and method shape for one SMILES and one database. Display up to 20 returned structures with shape similarity scores, preserving result identifiers and missing values. Do not label shape scores as fingerprint Tanimoto or biological activity."
+            },
+            {
+              "description": "Electrostatic similarity search",
+              "prompt": "Search Enamine REAL for up to 20 molecules electrostatically similar to CC(=O)Oc1ccccc1C(=O)O using ESP similarity and show the grid.",
+              "tools_triggered": "catalog, similarity_search",
+              "expected_behavior": "Use the catalog's database ID and method esp, returning at most 20 hits in the results grid. Identify the returned electrostatic similarity metric accurately and preserve the structures, scores and identifiers. Run the search sequentially with other guest requests."
+            },
+            {
+              "description": "Redisplay an earlier result without searching again",
+              "prompt": "After completing the aspirin Morgan search in this conversation: Show me those aspirin results again.",
+              "tools_triggered": "render_results",
+              "expected_behavior": "Call render_results with the result_id from the earlier aspirin search. Show the same structures, scores and identifiers without calling similarity_search again. If that cached result has expired, explain the error rather than silently starting a new search."
+            }
+          ],
+          "negative": [
+            {
+              "description": "A molecule name alone must not cause an invented structure",
+              "prompt": "Find molecules similar to cetirizine.",
+              "expected_behavior": "Explain that DeepMedChem does not resolve names. Ask for a verified SMILES, or resolve the name using a reliable source available in the host before searching. Never invent a SMILES."
+            },
+            {
+              "description": "Unsupported property and price constraints",
+              "prompt": "Find analogues of CC(=O)Oc1ccccc1C(=O)O with logP below 1 and price under $50.",
+              "expected_behavior": "Explain that guest MCP tools do not support property or price filters before searching. Do not present unfiltered similarity hits as satisfying those constraints; offer an unconstrained search or a supported authenticated workflow."
+            },
+            {
+              "description": "Requests beyond the guest limit",
+              "prompt": "Give me 500 molecules similar to aspirin, SMILES CC(=O)Oc1ccccc1C(=O)O.",
+              "expected_behavior": "Explain the 20-hit guest cap and offer at most 20 results. Do not loop or parallelize searches to bypass the limit."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Initial directory submission of DeepMedChem for ChatGPT: guest molecular similarity search using Morgan, shape and ESP methods, with a results grid, CSV export and saved CHEESE links. Package 0.1.1 corrects the support URL and category and includes five positive and three negative review cases."
       }
     }
   }
