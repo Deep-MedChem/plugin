@@ -55,7 +55,28 @@ and [submission error reference](https://developers.openai.com/plugins/deploy/su
 | Terms of service URL | https://cheese.deepmedchem.com/terms-and-conditions |
 | MCP server | `https://mcp.deepmedchem.com/mcp`, authentication None |
 
-Reviewer access: public, read-only endpoint. No account, login or test credentials.
+Reviewer access: public guest endpoint. Searches can consume shared capacity and
+create saved CHEESE jobs. No account, login or test credentials are required.
+
+## MCP annotation justifications
+
+After a server metadata update, open **MCPs → DeepMedChem → Issues → Rescan** (or
+**Scan Tools**, where shown). Wait for the scan, then check the imported server
+instructions and tool annotations. Justifications explain the server's values;
+they do not override them. See OpenAI's
+[MCP review requirements](https://developers.openai.com/plugins/deploy/app-review).
+
+For `similarity_search`, use these justifications when requested:
+
+| Annotation | Value | Justification |
+|---|---|---|
+| `readOnlyHint` | `false` | Can start a molecular similarity search and create a saved CHEESE job containing its query and results. This changes server state and consumes search capacity. |
+| `idempotentHint` | `false` | Repeating a search can create another saved job and consume additional capacity. Reuse the returned result ID with `render_results` to redisplay an existing result. |
+| `destructiveHint` | `false` | Creates new search results; does not delete or overwrite existing customer data or place orders. |
+| `openWorldHint` | `true` | Searches public chemical catalogues through DeepMedChem's hosted services. |
+
+`catalog` and `render_results` remain read-only: they retrieve catalogue metadata
+and existing result snapshots respectively.
 
 ## Five positive test cases
 
