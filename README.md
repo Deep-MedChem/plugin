@@ -96,6 +96,7 @@ After server updates, **refresh the ChatGPT connection and start a new chat**. I
 To build the OpenAI upload ZIP from the current source, run from the repository root:
 
 ```sh
+mkdir -p dist
 zip -qrX dist/deepmedchem-openai-plugin.zip plugin.json mcp.json skills assets -x '.*'
 ```
 
