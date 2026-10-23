@@ -9,6 +9,23 @@ Both plugin packages use the same hosted MCP service and [chemical-space-search 
 - [Test either platform](#try-it)
 - [Build the plugin packages](#plugin-packages)
 
+## Quick install
+
+Anyone can connect today. The plugin is a thin wrapper around a hosted MCP server: nothing runs locally, and no DeepMedChem account or API key is needed. Until the plugin appears in the Claude and ChatGPT directories, use these steps.
+
+**Claude Code** (CLI, desktop app, IDE extensions): run inside a Claude Code session
+
+```text
+/plugin marketplace add Deep-MedChem/plugin
+/plugin install deepmedchem@deepmedchem
+```
+
+**Claude web and desktop chat**: Settings (or Customize) → Connectors → **Add custom connector**, name `DeepMedChem`, URL `https://mcp.deepmedchem.com/mcp`, **No sign in**. Enable it under **+ → Connectors** in a new chat.
+
+**ChatGPT**: [chatgpt.com/plugins](https://chatgpt.com/plugins) → **+** → **Add custom MCP server**, name `DeepMedChem`, URL `https://mcp.deepmedchem.com/mcp`, **No authentication**. In a new chat type `@` and select DeepMedChem.
+
+Then run the [test prompt](#try-it). Full steps and workspace notes are in [Set up the hosted service](#set-up-the-hosted-service).
+
 ## What it does
 
 | Tool | What it does |
@@ -65,7 +82,7 @@ Run these commands inside a Claude Code session:
 /plugin install deepmedchem@deepmedchem
 ```
 
-The marketplace and plugin are both named `deepmedchem`. See the [Claude Code installation guide](https://code.claude.com/docs/en/discover-plugins) for installation scopes and workspace policies. The interactive grid depends on the host's MCP Apps support.
+The marketplace and plugin are both named `deepmedchem`. This repository is public, so the commands work outside the DeepMedChem organization. See the [Claude Code installation guide](https://code.claude.com/docs/en/discover-plugins) for installation scopes and workspace policies. The interactive grid depends on the host's MCP Apps support; where the host lacks it, results arrive as text with the CHEESE link, which is expected and not an installation problem.
 
 Connecting the MCP server directly makes its tools available. Installing the plugin package also provides the shared skill's workflow instructions.
 
