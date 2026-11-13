@@ -1,7 +1,7 @@
 {
   "name": "deepmedchem",
-  "version": "0.1.1",
-  "description": "Search public chemical spaces by molecular similarity with DeepMedChem.",
+  "version": "0.2.0",
+  "description": "Search public chemical spaces by molecular similarity or substructure with DeepMedChem.",
   "author": {
     "name": "Deep MedChem",
     "url": "https://deepmedchem.com"

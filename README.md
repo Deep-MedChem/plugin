@@ -1,6 +1,6 @@
 # DeepMedChem plugin for ChatGPT and Claude
 
-Search public DeepMedChem chemical spaces for molecules similar to a structure you supply, directly from **ChatGPT or Claude**. View molecular structures, similarity scores, prices and vendor catalogue IDs, then open the same saved results in [CHEESE](https://cheese.deepmedchem.com).
+Search public DeepMedChem chemical spaces for molecules similar to a structure you supply, or containing the substructures you require, directly from **ChatGPT or Claude**. View molecular structures, similarity scores, prices and vendor catalogue IDs, then open the same saved results in [CHEESE](https://cheese.deepmedchem.com).
 
 Both plugin packages use the same hosted MCP service and [chemical-space-search skill](skills/chemical-space-search/SKILL.md). This repository contains the package manifests, connection settings, skill and icon assets. It contains no backend server code or credentials, and using the hosted service requires no local MCP server or Python installation.
 
@@ -15,6 +15,7 @@ Both plugin packages use the same hosted MCP service and [chemical-space-search 
 |---|---|
 | `catalog` — List chemical space databases | Lists the available databases, their pricing and the current guest limits. |
 | `similarity_search` — Search similar molecules | Searches one SMILES against one database for up to 20 hits using `morgan` (fingerprint), `shape` or `esp` (electrostatic) similarity. |
+| `substructure_search` — Search by substructure | Finds up to 20 molecules in one database that contain every required pattern and no excluded one (SMILES or SMARTS). An optional reference molecule ranks the matches by `morgan`, `shape` or `esp` similarity. |
 | `render_results` — Show previous molecule results | Displays an earlier result again using its `result_id`, without submitting another search. |
 
 In hosts that support MCP Apps, results appear as an interactive structure grid with CSV export and a link to the vendor's catalogue. The grid displays the vendor `catalog_id` when the backend supplies one. The platform `product_id` remains the API identity and is retained in CSV exports; an internal hash must not be presented as a vendor catalogue ID.
@@ -77,6 +78,18 @@ Use the same prompts in ChatGPT and Claude:
 
 > Find 20 molecules similar to aspirin, SMILES CC(=O)Oc1ccccc1C(=O)O, in Enamine REAL using Morgan similarity, and show the results grid.
 
+Substructure search, one prompt per use case:
+
+> I am searching for a molecular glue. Keep these two scaffolds: O=C1CCC(N2C(=O)c3ccccc3C2=O)C(=O)N1 and c1ccc2[nH]ncc2c1. Search Chemspace Freedom Space.
+
+> This target needs a covalent inhibitor. Keep the carboxylic acid fixed and vary one position on the phenyl ring; rank by shape similarity to OC(=O)c1ccc(cc1)-c1ccncc1.
+
+> A patent claims para-substituted N-substituted benzamides. Are there analogues without a nitro group in Chemspace Freedom Space?
+
+> I am optimising a peptide. Find non-canonical amino acids to replace phenylalanine, N[C@@H](Cc1ccccc1)C(=O)O.
+
+The assistant writes the patterns: an open position (R group) is any substituent except hydrogen, and a blocked position keeps its hydrogens. The grid lists what every hit must and must not contain, and says whether the hits are ranked. A reference molecule only orders the hits; it does not filter them. If the search timed out or did not cover the whole library, the grid says so: that is not proof that nothing else exists.
+
 Check that:
 
 1. A compatible host shows molecular structures, scores, prices when available and vendor catalogue IDs when supplied.
@@ -104,9 +117,9 @@ The output is `dist/deepmedchem-openai-plugin.zip`. Maintainer submission instru
 
 ## Limits
 
-Guest searches accept one verified SMILES and one database at a time, with up to 20 hits. Guest capacity is shared: run searches sequentially. If the service is busy, wait briefly and retry once.
+Guest searches run against one database at a time, with up to 20 hits: one verified SMILES for similarity, or up to 6 required and 6 excluded patterns for substructure. A substructure search with several large scaffolds can take up to a minute and may return partial hits. Guest capacity is shared: run searches sequentially. If the service is busy, wait briefly and retry once.
 
-The guest tools do not resolve molecule names or support substructure constraints, property or price filters, property calculations, or SDF export. Supply a verified SMILES. For broader authenticated workflows, use [CHEESE](https://cheese.deepmedchem.com) or the [DeepMedChem Python SDK](https://github.com/Deep-MedChem/deepmedchem-python).
+The guest tools do not resolve molecule names or support property or price filters, property calculations, or SDF export. Flexible linkers, variable ring sizes and core marks are available only in the CHEESE drawing editor, and the dedicated amino-acid building-block databases only on the CHEESE website. Supply a verified SMILES. For broader authenticated workflows, use [CHEESE](https://cheese.deepmedchem.com) or the [DeepMedChem Python SDK](https://github.com/Deep-MedChem/deepmedchem-python).
 
 Similarity scores measure structural similarity, not biological activity or safety. Vendors determine availability and synthesis. Prices are catalogue list prices in USD for the default 1 mg amount shipped to the US; many make-on-demand products share the same price tier. Results are a bounded shortlist, not every match.
 
@@ -114,7 +127,7 @@ Similarity scores measure structural similarity, not biological activity or safe
 
 Both packages declare a remote MCP connection and a skill. Searches run on DeepMedChem's hosted services; the optional results grid is rendered by the assistant host.
 
-- Tool inputs include the SMILES you search, the chosen database, method and result count, plus a `result_id` when displaying an earlier result. These tool inputs are sent to DeepMedChem; your assistant platform separately handles your conversation under its own policies.
+- Tool inputs include the SMILES or substructure patterns you search, the chosen database, method and result count, plus a `result_id` when displaying an earlier result. These tool inputs are sent to DeepMedChem; your assistant platform separately handles your conversation under its own policies.
 - Requests go to `https://mcp.deepmedchem.com`, operated by Deep MedChem, which forwards searches to DeepMedChem backend services.
 - Guest callers need no customer account or API key. The server's backend credential is held by DeepMedChem and is not included in either package or sent to the client. Never paste API keys into a conversation.
 - Widget snapshots are kept in bounded server memory for `render_results` and CSV export. They can be evicted or lost when the server restarts, so old widget or CSV links can stop working.

@@ -1,9 +1,11 @@
 # OpenAI plugin submission material
 
-Open https://platform.openai.com/plugins and upload the **0.1.1 OpenAI ZIP** to the
+Open https://platform.openai.com/plugins and upload the **0.2.0 OpenAI ZIP** to the
 existing DeepMedChem plugin. Use **Upload new or existing plugin / Upload plugin**;
-do not create a second listing. Version 0.1.1 includes the support URL, the valid
+do not create a second listing. Version 0.2.0 adds substructure search. It keeps the support URL, the valid
 category, five positive and three negative review cases, and release notes.
+Upload it only after the MCP server with `substructure_search` is on production:
+the checks connect to the live server and the review cases call that tool.
 
 Use the ZIP attached to the matching GitHub release, or build it from a clean
 checkout of that release:
@@ -18,7 +20,7 @@ plugin uses `.claude-plugin/` and `.mcp.json`. Both share the same skill.
 
 ## Before submitting
 
-1. Select **0.1.1 · Draft** and wait for metadata and skill checks to finish.
+1. Select **0.2.0 · Draft** and wait for metadata and skill checks to finish.
 2. Under **MCPs**, open the DeepMedChem server and check that its URL is
    `https://mcp.deepmedchem.com/mcp` and authentication is **No Auth**.
 3. Leave **Challenge Base URL** blank to use the MCP hostname. The exact portal
@@ -45,7 +47,7 @@ and [submission error reference](https://developers.openai.com/plugins/deploy/su
 | Field | Value |
 |---|---|
 | Display name (≤30) | DeepMedChem |
-| Short description (≤30) | Molecular similarity search |
+| Short description (≤30) | Similarity & substructure |
 | Category | Education & Research |
 | Long description | from `plugin.json` `longDescription` |
 | Icon | the 256×256 PNG icon in the assets folder |
@@ -96,10 +98,15 @@ with the ZIP. To change imported cases, edit the package and upload a new versio
 3. **Shape search.** Prompt: "Search Enamine REAL for shape-similar analogues of
    c1ccc(CCNc2ncnc3ccccc23)cc1." Tool: `similarity_search` (method `shape`).
    Expected: grid of up to 20 hits ranked by shape cosine.
-4. **Electrostatic search.** Prompt: "Search Enamine REAL for up to 20 molecules
-   electrostatically similar to CC(=O)Oc1ccccc1C(=O)O using ESP similarity and show
-   the grid." Tools: `catalog`, `similarity_search` (method `esp`). Expected: up to
-   20 returned structures with the electrostatic similarity metric.
+4. **Substructure search.** Prompt: "In Chemspace Freedom Space, find up to 20
+   molecules that contain an indole and a carboxylic acid but no nitro group, ranked
+   by shape similarity to indole-3-acetic acid, SMILES OC(=O)Cc1c[nH]c2ccccc12. Show
+   the grid." Tools: `catalog`, `substructure_search` (indole and carboxylic acid in
+   `require`, nitro in `exclude`, the SMILES as `reference_smiles`, method `shape`).
+   Expected: the grid lists the conditions under "Must contain" and "Must not
+   contain", says the hits are ranked by shape similarity to the reference, and every
+   structure has an indole and a carboxylic acid and no nitro group. The assistant
+   says the reference only orders the hits and the list is a bounded shortlist.
 5. **Show an earlier result again.** After case 2, prompt: "Show me those aspirin
    results again." Tool: `render_results` with the earlier `result_id`. Expected: the
    same grid, same structures and scores, without a new search.
@@ -124,20 +131,23 @@ plugin package.
 1. **Name without a structure.** Prompt: "Find molecules similar to cetirizine."
    Expected: the assistant does not invent a structure. It asks for a SMILES, or uses
    a reliable source it has, and says DeepMedChem itself does not resolve names.
-2. **Unsupported constraint.** Prompt: "Find analogues of CC(=O)Oc1ccccc1C(=O)O with
-   logP below 1 and price under $50." Expected: the assistant explains that property
-   and price filters are not supported before searching, and does not present an
-   unfiltered similarity search as satisfying the constraint.
+2. **Unsupported constraint.** Prompt: "Find molecules with an indole joined to a
+   pyridine by a flexible linker of 2 to 5 atoms, with logP below 1 and price under
+   $50." Expected: the assistant explains before searching that flexible linkers,
+   property filters and price filters are not supported (flexible linkers exist only
+   in the CHEESE drawing editor). It may offer a substructure search requiring both
+   rings, and does not present its hits as satisfying the unsupported constraints.
 3. **Beyond the guest cap.** Prompt: "Give me 500 molecules similar to aspirin."
    Expected: the assistant explains the 20-result guest limit, returns at most 20,
    and does not loop searches to get around it.
 
 ## Release notes
 
-Initial directory submission of DeepMedChem for ChatGPT: guest molecular
-similarity search using Morgan, shape and ESP methods, with a results grid, CSV
-export and saved CHEESE links. Package 0.1.1 corrects the support URL and category
-and includes five positive and three negative review cases.
+Version 0.2.0 adds substructure search: required and excluded SMILES or SMARTS
+patterns, R-group and blocked positions, and optional ranking of the matches by
+Morgan, shape or ESP similarity to a reference molecule. The results grid shows the
+conditions and whether the search completed. Similarity search, the results grid,
+CSV export and saved CHEESE links are unchanged.
 
 ## Demo recording checklist
 
@@ -147,7 +157,8 @@ Record the ChatGPT web interface with a fresh DeepMedChem connection:
 2. Show the molecular grid and catalogue IDs. Download the CSV and open the
    returned CHEESE link; reload it to demonstrate the same stored results.
 3. Return to the chat and ask to show the aspirin results again.
-4. Run the shape and ESP prompts, one at a time, and show their grids and metrics.
+4. Run the shape and substructure prompts, one at a time, and show their grids:
+   the shape metric, then the conditions and ranking line of the substructure result.
 5. Run the three negative prompts and show the clarifications or limitations.
 
 Upload the recording to a URL reviewers can open without requesting access.
