@@ -9,7 +9,7 @@
     {
       "name": "deepmedchem",
       "source": "./",
-      "description": "Search public chemical spaces by molecular similarity with DeepMedChem."
+      "description": "Search public chemical spaces by molecular similarity or substructure with DeepMedChem."
     }
   ]
 }
