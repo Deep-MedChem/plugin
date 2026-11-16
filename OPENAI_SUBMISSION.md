@@ -134,7 +134,7 @@ plugin package.
 2. **Unsupported constraint.** Prompt: "Find molecules with an indole joined to a
    pyridine by a flexible linker of 2 to 5 atoms, with logP below 1 and price under
    $50." Expected: the assistant explains before searching that flexible linkers,
-   property filters and price filters are not supported (flexible linkers exist only
+   logP filters and price filters are not supported (flexible linkers exist only
    in the CHEESE drawing editor). It may offer a substructure search requiring both
    rings, and does not present its hits as satisfying the unsupported constraints.
 3. **Beyond the guest cap.** Prompt: "Give me 500 molecules similar to aspirin."

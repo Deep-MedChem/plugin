@@ -76,7 +76,7 @@
             {
               "description": "Unsupported property, price and flexible-linker constraints",
               "prompt": "Find molecules with an indole joined to a pyridine by a flexible linker of 2 to 5 atoms, with logP below 1 and price under $50.",
-              "expected_behavior": "Explain before searching that the guest tools do not support flexible linkers, property filters or price filters; flexible linkers exist only in the CHEESE drawing editor. Offer a substructure search that requires both rings without the linker, logP or price constraint, and do not present its hits as satisfying them."
+              "expected_behavior": "Explain before searching that the guest tools do not support flexible linkers, logP filters or price filters; flexible linkers exist only in the CHEESE drawing editor. Offer a substructure search that requires both rings without the linker, logP or price constraint, and do not present its hits as satisfying them."
             },
             {
               "description": "Requests beyond the guest limit",

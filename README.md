@@ -88,7 +88,7 @@ Substructure search, one prompt per use case:
 
 > I am optimising a peptide. Find non-canonical amino acids to replace phenylalanine, N[C@@H](Cc1ccccc1)C(=O)O.
 
-The assistant writes the patterns: an open position (R group) is any substituent except hydrogen, and a blocked position keeps its hydrogens. The grid lists what every hit must and must not contain, and says whether the hits are ranked. A reference molecule only orders the hits; it does not filter them. If the search timed out or did not cover the whole library, the grid says so: that is not proof that nothing else exists.
+The assistant writes the patterns: an open position (R group) is any substituent except hydrogen, and a blocked position keeps its hydrogens. The grid lists what every hit must and must not contain, and says whether the hits are ranked. A reference molecule only orders the hits; it does not filter them. An upper limit on molecular weight can be added; it is applied to the first 100 matches, and the grid says how many passed. If the search timed out or did not cover the whole library, the grid says so: that is not proof that nothing else exists.
 
 Check that:
 
@@ -119,7 +119,7 @@ The output is `dist/deepmedchem-openai-plugin.zip`. Maintainer submission instru
 
 Guest searches run against one database at a time, with up to 20 hits: one verified SMILES for similarity, or up to 6 required and 6 excluded patterns for substructure. A substructure search with several large scaffolds can take up to a minute and may return partial hits. Guest capacity is shared: run searches sequentially. If the service is busy, wait briefly and retry once.
 
-The guest tools do not resolve molecule names or support property or price filters, property calculations, or SDF export. Flexible linkers, variable ring sizes and core marks are available only in the CHEESE drawing editor, and the dedicated amino-acid building-block databases only on the CHEESE website. Supply a verified SMILES. For broader authenticated workflows, use [CHEESE](https://cheese.deepmedchem.com) or the [DeepMedChem Python SDK](https://github.com/Deep-MedChem/deepmedchem-python).
+The guest tools do not resolve molecule names or support logP or price filters, property calculations, or SDF export. Flexible linkers, variable ring sizes and core marks are available only in the CHEESE drawing editor, and the dedicated amino-acid building-block databases only on the CHEESE website. Supply a verified SMILES. For broader authenticated workflows, use [CHEESE](https://cheese.deepmedchem.com) or the [DeepMedChem Python SDK](https://github.com/Deep-MedChem/deepmedchem-python).
 
 Similarity scores measure structural similarity, not biological activity or safety. Vendors determine availability and synthesis. Prices are catalogue list prices in USD for the default 1 mg amount shipped to the US; many make-on-demand products share the same price tier. Results are a bounded shortlist, not every match.
 
