@@ -97,7 +97,7 @@ Check that:
 3. **Open in CHEESE** uses the returned `job=` link and opens the existing results. Reloading the page should show the same results without starting another search.
 4. Asking **“Show me those aspirin results again”** reuses the earlier `result_id` through `render_results` instead of running another search.
 
-After server updates, **refresh the ChatGPT connection and start a new chat**. In Claude, reconnect if the connector still shows stale tools or results, then start a new chat. Existing chat messages can retain an older grid. If your host does not display the grid, use the returned CHEESE link to view the saved results.
+After server updates, **refresh the ChatGPT connection and start a new chat**. In Claude, reconnect if the connector still shows stale tools or results, then start a new chat. Existing chat messages can retain an older grid. If your host does not display the grid (the Claude Code terminal does not), the assistant lists the hits as text; use the returned CHEESE link to view the structures.
 
 ## Plugin packages
 
