@@ -1,8 +1,8 @@
 # OpenAI plugin submission material
 
-Open https://platform.openai.com/plugins and upload the **0.2.0 OpenAI ZIP** to the
+Open https://platform.openai.com/plugins and upload the **0.2.1 OpenAI ZIP** to the
 existing DeepMedChem plugin. Use **Upload new or existing plugin / Upload plugin**;
-do not create a second listing. Version 0.2.0 adds substructure search. It keeps the support URL, the valid
+do not create a second listing. Version 0.2.1 adds substructure search. It keeps the support URL, the valid
 category, five positive and three negative review cases, and release notes.
 Upload it only after the MCP server with `substructure_search` is on production:
 the checks connect to the live server and the review cases call that tool.
@@ -20,7 +20,7 @@ plugin uses `.claude-plugin/` and `.mcp.json`. Both share the same skill.
 
 ## Before submitting
 
-1. Select **0.2.0 · Draft** and wait for metadata and skill checks to finish.
+1. Select **0.2.1 · Draft** and wait for metadata and skill checks to finish.
 2. Under **MCPs**, open the DeepMedChem server and check that its URL is
    `https://mcp.deepmedchem.com/mcp` and authentication is **No Auth**.
 3. Leave **Challenge Base URL** blank to use the MCP hostname. The exact portal
@@ -143,7 +143,7 @@ plugin package.
 
 ## Release notes
 
-Version 0.2.0 adds substructure search: required and excluded SMILES or SMARTS
+Version 0.2.1 adds substructure search: required and excluded SMILES or SMARTS
 patterns, R-group and blocked positions, and optional ranking of the matches by
 Morgan, shape or ESP similarity to a reference molecule. The results grid shows the
 conditions and whether the search completed. Similarity search, the results grid,
