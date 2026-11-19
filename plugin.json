@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deepmedchem",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Search public chemical spaces by molecular similarity or substructure with DeepMedChem.",
   "author": {
     "name": "Deep MedChem",
@@ -87,7 +87,7 @@
         }
       },
       "publication": {
-        "release_notes": "Version 0.2.0 adds substructure search: required and excluded SMILES or SMARTS patterns, R-group and blocked positions, and optional ranking of the matches by Morgan, shape or ESP similarity to a reference molecule. The results grid shows the conditions and whether the search completed. Similarity search, the results grid, CSV export and saved CHEESE links are unchanged."
+        "release_notes": "Version 0.2.1 adds substructure search: required and excluded SMILES or SMARTS patterns, R-group and blocked positions, and optional ranking of the matches by Morgan, shape or ESP similarity to a reference molecule. The results grid shows the conditions and whether the search completed. Similarity search, the results grid, CSV export and saved CHEESE links are unchanged."
       }
     }
   }
